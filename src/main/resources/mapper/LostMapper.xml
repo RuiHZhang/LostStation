@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zrh.dao.LostDao">
+
+<select id="getAllLosts" resultMap="LostMap">
+    select * from lost where lostreview = 2 order by losttime asc
+</select>
+
+<resultMap id="LostMap" type="com.zrh.pojo.Lost">
+    <id column="lostid" property="lostid" />
+    <association property="losttype" javaType="com.zrh.pojo.Type" column="losttype" select="com.zrh.dao.TypeDao.getTypeById" />
+    <association property="lostuser" javaType="com.zrh.pojo.User" column="lostuser" select="com.zrh.dao.UserDao.getUserById" />
+    <association property="loststatus" javaType="com.zrh.pojo.Status" column="loststatus" select="com.zrh.dao.StatusDao.getStatusById" />
+    <association property="lostreview" javaType="com.zrh.pojo.Review" column="lostreview" select="com.zrh.dao.ReviewDao.getReviewById" />
+</resultMap>
+
+<select id="getLostById" resultMap="LostMap">
+    select * from lost where lostid = #{lostid}
+</select>
+
+<select id="getTotalCount" resultType="java.lang.Long">
+    select count(1) from lost where lostreview = 2
+</select>
+
+<select id="dynamicGetLosts" resultMap="LostMap">
+    select * from lost where lostreview = 2
+    <if test="param1 != null">
+        and losttype = #{param1}
+    </if>
+    <if test="param2 != null">
+        and loststatus = #{param2}
+    </if>
+</select>
+
+<insert id="postLost">
+    insert lost values(null,#{lostname},#{lostimg},#{lostdesc},#{losttime},#{losttype.typeid},#{lostuser.userid},#{loststatus.statusid},#{lostreview.reviewid})
+</insert>
+
+<update id="updateLostStatus">
+    update lost set loststatus = 1 where lostid = #{lostid}
+</update>
+
+<select id="getLostsByUserId" resultMap="LostMap">
+    select * from lost where lostuser = #{userid}
+</select>
+
+</mapper>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zrh.dao.TypeDao">
+
+<select id="getAllTypes" resultType="com.zrh.pojo.Type">
+    select * from type
+</select>
+
+<select id="getTypeById" resultType="com.zrh.pojo.Type">
+    select * from type where typeid = #{typeid}
+</select>
+
+</mapper>
