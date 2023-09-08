@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zrh.dao.CommentDao">
+
+<select id="getCommentsByLostId" resultMap="CommentMap">
+    select * from comment where lostid = #{lostid}
+</select>
+
+<resultMap id="CommentMap" type="com.zrh.pojo.Comment">
+    <id property="commentid" column="commentid" />
+    <association property="lost" javaType="com.zrh.pojo.Lost" column="lostid" select="com.zrh.dao.LostDao.getLostById" />
+    <association property="user" javaType="com.zrh.pojo.User" column="userid" select="com.zrh.dao.UserDao.getUserById" />
+</resultMap>
+
+<insert id="addComment">
+    insert into comment values(null,#{ccontent},#{lost.lostid},#{user.userid},#{commenttime});
+</insert>
+
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <context:component-scan base-package="com.zrh.controller" />
+    <context:component-scan base-package="com.zrh.service" />
+
+    <mvc:annotation-driven />
+    <mvc:default-servlet-handler />
+
+    <mvc:interceptors>
+        <mvc:interceptor>
+<!--            <mvc:mapping path="/**/**"/>-->
+            <mvc:mapping path="/find/goPostFind"/>
+            <mvc:mapping path="/lost/goPostLost"/>
+            <bean class="com.zrh.interceptor.LoginInterceptor" scope="session" />
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+<!--    视图解析器-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" >
+        <property name="prefix" value="/WEB-INF/view/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
+
+<!--    文件上传解析器-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="1048576" />
+    </bean>
+
+    <import resource="classpath:spring-mybatis.xml" />
+</beans>

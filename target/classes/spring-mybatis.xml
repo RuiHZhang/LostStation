@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <context:property-placeholder location="classpath:db.properties" />
+
+<!--    配置druid连接池-->
+    <bean class="com.alibaba.druid.pool.DruidDataSource" id="dataSource">
+        <property name="driverClassName" value="${driver}" />
+        <property name="url" value="${url}" />
+        <property name="username" value="${user}" />
+        <property name="password" value="${pass}" />
+    </bean>
+
+    <bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">
+        <property name="dataSource" ref="dataSource"/>
+
+<!--        配置别名映射,就不用在*Mapper.xml中的resultType中写类的全路径了-->
+        <property name="typeAliasesPackage" value="com.zrh.pojo" />
+
+<!--        配置映射文件（类似UserMapper.xml等）的文件路径-->
+        <property name="mapperLocations" value="classpath:mapper/*Mapper.xml" />
+
+        <property name="configLocation" value="classpath:mybatis-config.xml" />
+    </bean>
+
+<!--    映射文件搜扫描器配置-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.zrh.dao" />
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+    </bean>
+
+    <bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="txm">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <tx:advice transaction-manager="txm" id="tx">
+        <tx:attributes>
+            <tx:method name="save*" propagation="REQUIRED" isolation="DEFAULT" rollback-for="Exception" />
+            <tx:method name="update*" propagation="REQUIRED" isolation="DEFAULT" rollback-for="Exception" />
+            <tx:method name="insert*" propagation="REQUIRED" isolation="DEFAULT" rollback-for="Exception" />
+            <tx:method name="delete*" propagation="REQUIRED" isolation="DEFAULT" rollback-for="Exception" />
+            <tx:method name="add*" propagation="REQUIRED" isolation="DEFAULT" rollback-for="Exception" />
+        </tx:attributes>
+    </tx:advice>
+
+    <aop:config>
+        <aop:pointcut id="pt" expression="execution(* com.zrh.service.*.*(..))"/>
+        <aop:advisor advice-ref="tx" pointcut-ref="pt" />
+    </aop:config>
+</beans>

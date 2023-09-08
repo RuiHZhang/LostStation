@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zrh.dao.StatusDao">
+
+
+<select id="getAllStatus" resultType="com.zrh.pojo.Status">
+    select * from status
+</select>
+
+<select id="getStatusById" resultType="com.zrh.pojo.Status">
+    select * from status where statusid = #{statusid}
+</select>
+
+
+
+</mapper>

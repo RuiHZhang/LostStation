@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zrh.dao.FindDao">
+
+<select id="getAllFinds" resultMap="FindMap">
+    select * from find order by findtime asc
+</select>
+
+<resultMap id="FindMap" type="com.zrh.pojo.Find">
+    <id column="findid" property="findid" />
+    <association property="findtype" javaType="com.zrh.pojo.Type" column="findtype" select="com.zrh.dao.TypeDao.getTypeById" />
+    <association property="finduser" javaType="com.zrh.pojo.User" column="finduser" select="com.zrh.dao.UserDao.getUserById" />
+    <association property="findstatus" javaType="com.zrh.pojo.Status" column="findstatus" select="com.zrh.dao.StatusDao.getStatusById" />
+</resultMap>
+
+<select id="getFindById" resultMap="FindMap">
+    select * from find where findid = #{findid}
+</select>
+
+<select id="getTotalCount" resultType="java.lang.Long">
+    select count(1) from find
+</select>
+
+</mapper>
